@@ -1,0 +1,117 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Casino GusOfc</title>
+  <style>
+    body {
+      background: linear-gradient(45deg, #111, #550000);
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: gold;
+      text-shadow: 2px 2px 5px #000;
+    }
+    .slot {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+      font-size: 50px;
+    }
+    .reel {
+      background: #222;
+      border: 3px solid gold;
+      border-radius: 10px;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 5px;
+    }
+    .controls button {
+      background: gold;
+      color: #000;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 5px;
+    }
+    .controls button:hover {
+      background: orange;
+    }
+    .coins {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #0f0;
+    }
+    .message {
+      margin-top: 10px;
+      font-size: 20px;
+      color: cyan;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎰 Casino GusOfc 🎰</h1>
+  <div class="slot">
+    <div class="reel" id="r1">🍒</div>
+    <div class="reel" id="r2">🍋</div>
+    <div class="reel" id="r3">⭐</div>
+  </div>
+  <div class="controls">
+    <button onclick="spin(100)">Taruhan 100</button>
+    <button onclick="spin(500)">Taruhan 500</button>
+    <button onclick="spin(1000)">Taruhan 1000</button>
+  </div>
+  <div class="coins" id="coins">Koin: 10000</div>
+  <div class="message" id="message">Tekan tombol untuk bermain</div><audio id="spinSound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-slot-machine-bling-1998.mp3"></audio> <audio id="winSound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3"></audio>
+
+  <script>
+    const symbols = ["🍒", "🍋", "💎", "7️⃣", "⭐"];
+    let coins = localStorage.getItem('coins') ? parseInt(localStorage.getItem('coins')) : 10000;
+
+    document.getElementById('coins').innerText = `Koin: ${coins}`;
+
+    function spin(bet) {
+      if (coins < bet) {
+        document.getElementById('message').innerText = "Koin tidak cukup!";
+        return;
+      }
+      coins -= bet;
+      localStorage.setItem('coins', coins);
+      document.getElementById('coins').innerText = `Koin: ${coins}`;
+      document.getElementById('spinSound').play();
+
+      const r1 = symbols[Math.floor(Math.random()*symbols.length)];
+      const r2 = symbols[Math.floor(Math.random()*symbols.length)];
+      const r3 = symbols[Math.floor(Math.random()*symbols.length)];
+
+      document.getElementById('r1').innerText = r1;
+      document.getElementById('r2').innerText = r2;
+      document.getElementById('r3').innerText = r3;
+
+      if (r1 === r2 && r2 === r3) {
+        const win = bet * 10;
+        coins += win;
+        localStorage.setItem('coins', coins);
+        document.getElementById('coins').innerText = `Koin: ${coins}`;
+        document.getElementById('message').innerText = `MENANG! +${win} koin`;
+        document.getElementById('winSound').play();
+      } else if (r1 === r2 || r2 === r3 || r1 === r3) {
+        const win = bet * 2;
+        coins += win;
+        localStorage.setItem('coins', coins);
+        document.getElementById('coins').innerText = `Koin: ${coins}`;
+        document.getElementById('message').innerText = `Lumayan! +${win} koin`;
+      } else {
+        document.getElementById('message').innerText = "Coba lagi!";
+      }
+    }
+  </script></body>
+</html>
